@@ -4,15 +4,17 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:food_recipe_app/RecipeView.dart';
 import 'package:food_recipe_app/model.dart';
-import 'package:food_recipe_app/search.dart';
 import 'package:http/http.dart';
 
-class Home extends StatefulWidget {
+class search extends StatefulWidget {
+  String query;
+  search(this.query);
+
   @override
-  State<Home> createState() => _HomeState();
+  State<search> createState() => _searchState();
 }
 
-class _HomeState extends State<Home> {
+class _searchState extends State<search> {
   bool isLoading = true;
   List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = new TextEditingController();
@@ -62,14 +64,13 @@ class _HomeState extends State<Home> {
       print(Recipe.applable);
       print(Recipe.appcalories);
       print(Recipe.appimgUrl);
-      print(Recipe.appurl);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getRecipe("Chicken");
+    getRecipe(widget.query);
   }
 
   Widget build(BuildContext context) {
@@ -107,7 +108,7 @@ class _HomeState extends State<Home> {
                                 "") {
                               print("Blank Search");
                             } else {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: ((context) =>
@@ -132,25 +133,6 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "WHAT DO YOU WANT TO EAT TODAY",
-                        style: TextStyle(fontSize: 33, color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Let's Cook Something New..!",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )
-                    ],
                   ),
                 ),
                 Container(
@@ -237,70 +219,6 @@ class _HomeState extends State<Home> {
                           },
                         ),
                 ),
-                Container(
-                  height: 100,
-                  child: ListView.builder(
-                      itemCount: reciptCatList.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => search(
-                                          reciptCatList[index]["heading"])));
-                            },
-                            child: Card(
-                              margin: EdgeInsets.all(10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                              elevation: 0.0,
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(18),
-                                    child: Image.network(
-                                      reciptCatList[index]["imgUrl"],
-                                      fit: BoxFit.cover,
-                                      width: 200,
-                                      height: 250,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    top: 0,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 5, horizontal: 10),
-                                      decoration:
-                                          BoxDecoration(color: Colors.black26),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            reciptCatList[index]["heading"],
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 28),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                )
               ],
             ),
           )
